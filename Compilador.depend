@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1536707159 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\compilador\main.cpp
+	<iostream>
+	<stdio.h>
+	<string.h>
+	"scan.h"
+
+1536704299 c:\users\lucas.santos.a32\documents\projeto_compiladores\compilador\scan.h
+	<stdio.h>
+
+1536708782 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\compilador\scan.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"scan.h"
+
