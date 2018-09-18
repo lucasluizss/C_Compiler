@@ -4,7 +4,7 @@
 #include"scan.h"
 
 //using namespace std;
-//extern Tk *getTokens(char *nome);
+extern Tk *getTokens(char *nome);
 
 /*********************************
  * Nome: main
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
     Tk *listToken;
 
-    listToken = getTokens("arquivoe1");
+    listToken = getTokens("");
 
     return 0;
 }

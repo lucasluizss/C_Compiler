@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1536707159 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\compilador\main.cpp
+1537309604 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\compilador\main.cpp
 	<iostream>
 	<stdio.h>
 	<string.h>
