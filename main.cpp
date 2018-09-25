@@ -4,7 +4,7 @@
 #include"scan.h"
 
 //using namespace std;
-extern Tk *getTokens(char *nome);
+//extern Tk *getTokens(char *nome);
 
 /*********************************
  * Nome: main

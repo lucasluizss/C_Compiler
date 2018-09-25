@@ -12,7 +12,7 @@ char token[256];
 int ntoken;
 
 
-// funções locais
+// funï¿½ï¿½es locais
 FILE *abreArq(char *nome);
 void nextChar(FILE *p);
 void scan(FILE *P);
@@ -28,13 +28,39 @@ void getNum(FILE *p);
 
 /***********************************************
  * Nome: getTokens
- * desc: obtém todos os tokens do arquivo nome
+ * desc: obtï¿½m todos os tokens do arquivo nome
  * returno: ponteiro para a lista de tokens
  ***********************************************/
 Tk *getTokens(char *nome)
 {
+    char *eeeee;
+    linha = 1;
+    coluna = 0;
+    ntoken = 0;
+
     Tk *TkList=NULL, *elemento=NULL;
-    FILE *P;
+    FILE *p;
+    abreArq(nome);
+    nextChar(p);
+
+    while(!feof(p))
+    {
+        scan(p);
+
+        ntoken++;
+
+        str = (char*) malloc(sizeof(char)*strlen(token) + 1);
+        strcpy(str, token);
+        
+        elemento = (Tk*) malloc(sizeof(Tk));
+        elemento->nome = str;
+        elemento->linha = linha;
+        elemento->coluna = coluna;
+        elemento->id = ntoken;
+        elemento->prox = NULL;
+
+        insereTk(TkList, elemento);
+    }
 
     return TkList;
 }
@@ -46,11 +72,19 @@ Tk *getTokens(char *nome)
  ********************************/
 void scan(FILE *p)
 {
-    while(p != EOF)
-    {
-
-
+    if(look == ' ' || look == '\t'){
+        skipWhite(p);
     }
+
+    if(look == '\n' || look == 13){ // CR LF
+        newLine(p);
+    }
+
+    if((look > 64 && look < 91) || (look > 96 && look < 123)){
+        getWord(p);
+    }
+
+
 }
 
 /*********************************
@@ -63,13 +97,13 @@ FILE *abreArq(char *nome)
     char *var;
     FILE *in;
 
-    // aqui tem um exemplo do uso da função strstr
+    // aqui tem um exemplo do uso da funï¿½ï¿½o strstr
 
     var = strstr(nome,".c");
-    if(var ==NULL) // O ARQUIVO NÃO TEM EXTENÇÃO
+    if(var ==NULL) // O ARQUIVO Nï¿½O TEM EXTENï¿½ï¿½O
     {
         printf("Arquivo : %s invalido!\n",nome);
-        exit(1); // cada erro será tratado com uma saída diferente de 0.
+        exit(1); // cada erro serï¿½ tratado com uma saï¿½da diferente de 0.
     }
     in = fopen(nome,"r");
     if(in == NULL)
@@ -89,6 +123,14 @@ void insereTk(Tk *TkList, Tk *TkElemento)
 {
     Tk *ptr;
 
+    if(TkList == NULL){
+        TkList = TkElemento;
+    }
+    else{
+        for(ptr = TkList; ptr->prox != NULL; ptr = ptr->prox){
+            ptr->prox = TkElemento;
+        }
+    }
 
 }
 
@@ -155,7 +197,11 @@ void skipWhite(FILE *p)
  ********************************/
 void newLine(FILE *p)
 {
-
+    while(look == '\n' || look == 13){
+        nextChar(p);
+        if(look == '\n')
+            linha++;
+    }
 }
 
 /*********************************
@@ -186,8 +232,11 @@ void getNum(FILE *p)
  ********************************/
 void getWord(FILE *p)
 {
-    int i;
+    int i = 0;
 
+    while(isalnum(look) || look == '_'){ //leia_isso
+        token[i++] = look;
+    }
 }
 
 /*********************************
