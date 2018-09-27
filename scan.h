@@ -23,7 +23,7 @@ struct tokens *prox;
 
 // declaração das funções globais
 Tk *getTokens(char *nome);
-void insereTk(Tk *TkList, Tk *elemento );
+void insereTk(Tk *elemento );
 void exibeTk(Tk *TkList);
 void removeTk(Tk *TkList, int chave);
 void liberaTk(Tk *TkList);

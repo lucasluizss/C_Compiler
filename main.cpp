@@ -13,8 +13,6 @@ using namespace std;
  ********************************/
 int main(int argc, char *argv[])
 {
-    printf("teste");
-
     Tk *Lista;
     char nome[50];
 
