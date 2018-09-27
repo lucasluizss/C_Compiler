@@ -34,7 +34,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="main.cpp" />
-		<Unit filename="scan.c">
+		<Unit filename="scan.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="scan.h" />
