@@ -24,7 +24,9 @@ void getOp(FILE *p);
 void skipComment(FILE *p);
 void getOp(FILE *p);
 int isOp(char c);
+int isSpecial(char c);
 void getNum(FILE *p);
+
 
 /***********************************************
  * Nome: getTokens
@@ -43,7 +45,7 @@ Tk *getTokens(char *nome)
     p = abreArq(nome);
     nextChar(p);
     
-    while(ntoken < 12)
+    while(!feof(p))
     {   scan(p);
 
         ntoken++;
@@ -79,14 +81,16 @@ void scan(FILE *p)
         newLine(p);
     }
 
-    if(isOp(look)){
-        token[0] = look;
-        nextChar(p);
+    if(isOp(look) || isSpecial(look)){
+        getOp(p);
     } 
     else if((look > 64 && look < 91) || (look > 96 && look < 123)){
         getWord(p);
     }
 
+    else{
+        getOp(p);
+    }
 }
 
 /*********************************
@@ -146,7 +150,11 @@ void exibeTk(Tk *TkList)
     int linhaAtual = 1;
     while(TkList != NULL){
         if(TkList->linha > linhaAtual){
-            printf("\n");
+            int diff = TkList->linha - linhaAtual  ;
+            for(int i=0;i<diff;i++){
+                printf("\n");
+            }            
+            linhaAtual = TkList->linha;
         }
         printf("%s ", TkList->nome);
         TkList = TkList->prox;
@@ -258,8 +266,9 @@ void getWord(FILE *p)
 void getOp(FILE *p)
 {
     int i;
-
-
+    token[0] = look;
+    token[1] = '\0';
+    nextChar(p);
 }
 
 /*********************************
@@ -270,4 +279,9 @@ void getOp(FILE *p)
 int isOp(char c)
 {
     return (strchr("#.+-*/<>:=!", c) != NULL); //Returns a pointer to the first occurrence of character in the C string str.
+}
+
+int isSpecial(char c)
+{
+    return (strchr("{}(),;[]\"", c) != NULL);
 }
