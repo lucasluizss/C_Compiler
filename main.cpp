@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     Tk *Lista;
-    char nome[50];
+    char nome[50];// = "arquivo.c";
 
     if(argc==2){
         strcpy(nome, argv[1]);

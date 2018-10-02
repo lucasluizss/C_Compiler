@@ -15,3 +15,19 @@
 	<ctype.h>
 	"scan.h"
 
+1538519069 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\c_compiler\main.cpp
+	<iostream>
+	<stdio.h>
+	<string.h>
+	"scan.h"
+
+1538519069 c:\users\lucas.santos.a32\documents\projeto_compiladores\c_compiler\scan.h
+	<stdio.h>
+
+1538519232 source:c:\users\lucas.santos.a32\documents\projeto_compiladores\c_compiler\scan.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"scan.h"
+

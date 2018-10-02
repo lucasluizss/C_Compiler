@@ -6,7 +6,7 @@
 
 // variaveis globais
 int linha;
-int coluna;
+int coluna, antColumn;
 char look;
 char token[256];
 int ntoken;
@@ -39,14 +39,14 @@ Tk *getTokens(char *nome)
     coluna = 0;
     ntoken = 0;
 
-    
     FILE *p;
     char *str;
     p = abreArq(nome);
     nextChar(p);
-    
+
     while(!feof(p))
-    {   scan(p);
+    {
+        scan(p);
 
         ntoken++;
         //printf("Token: %d \n", ntoken);
@@ -55,10 +55,10 @@ Tk *getTokens(char *nome)
         elemento = (Tk*) malloc(sizeof(Tk));
         elemento->nome = str;
         elemento->linha = linha;
-        elemento->coluna = coluna;
+        elemento->coluna = antColumn;
         elemento->id = ntoken;
         elemento->prox = NULL;
-        insereTk(elemento); 
+        insereTk(elemento);
         //printf("Token: %s \n", elemento->nome);
     }
 
@@ -71,8 +71,9 @@ Tk *getTokens(char *nome)
  * returno:
  ********************************/
 void scan(FILE *p)
-{   
+{
     strcpy(token, "");
+
     if(look == ' ' || look == '\t'){
         skipWhite(p);
     }
@@ -82,13 +83,15 @@ void scan(FILE *p)
     }
 
     if(isOp(look) || isSpecial(look)){
+        antColumn = coluna;
         getOp(p);
-    } 
+    }
     else if((look > 64 && look < 91) || (look > 96 && look < 123)){
+        antColumn = coluna;
         getWord(p);
     }
-
     else{
+        antColumn = coluna;
         getOp(p);
     }
 }
@@ -106,17 +109,21 @@ FILE *abreArq(char *nome)
     // aqui tem um exemplo do uso da fun��o strstr
 
     var = strstr(nome,".c");
-    if(var ==NULL) // O ARQUIVO N�O TEM EXTEN��O
+
+    if(var == NULL) // O ARQUIVO N�O TEM EXTEN��O
     {
-        printf("Arquivo : %s invalido!\n",nome);
+        printf("Arquivo : %s invalido!\n", nome);
         exit(1); // cada erro ser� tratado com uma sa�da diferente de 0.
     }
+
     in = fopen(nome,"r");
+
     if(in == NULL)
     {
         printf("Nao foi possivel abrir o arquivo %s \n",nome);
         exit(3);
     }
+
     return in;
 }
 
@@ -132,7 +139,7 @@ void insereTk(Tk *TkElemento)
     if(TkList == NULL){
         TkList = TkElemento;
     }
-    
+
     else{
         for(ptr = TkList; ptr->prox != NULL; ptr = ptr->prox);
         ptr->prox = TkElemento;
@@ -146,20 +153,25 @@ void insereTk(Tk *TkElemento)
  * returno: void
  ********************************/
 void exibeTk(Tk *TkList)
-{   
+{
     int linhaAtual = 1;
+
     while(TkList != NULL){
         if(TkList->linha > linhaAtual){
             int diff = TkList->linha - linhaAtual  ;
+
             for(int i=0;i<diff;i++){
                 printf("\n");
-            }            
+            }
+
             linhaAtual = TkList->linha;
         }
-        printf("%s ", TkList->nome);
+
+        printf("%s", TkList->nome);
         TkList = TkList->prox;
     }
 
+    printf("\n\nLinhas: %d\n", linha);
 }
 
 /*********************************
@@ -190,9 +202,10 @@ void removeTk(Tk *TkList, int chave)
  ********************************/
 void nextChar(FILE *p)
 {
-    if(look !=EOF) // EOF(End Of File)
+    if(look != EOF) // EOF(End Of File)
     {
         look = getc(p);
+        coluna++;
     }
 }
 
@@ -203,8 +216,9 @@ void nextChar(FILE *p)
  ********************************/
 void skipWhite(FILE *p)
 {
-    while (look == ' ' || look == '\t')
+    while (look == ' ' || look == '\t'){
         nextChar(p);
+    }
 }
 
 /*********************************
@@ -215,8 +229,11 @@ void skipWhite(FILE *p)
 void newLine(FILE *p)
 {
     while(look == '\n' || look == 13){
-        if(look == '\n')
+        if(look == '\n'){
             linha++;
+            coluna = 0;
+        }
+
         nextChar(p);
     }
 }
@@ -228,7 +245,16 @@ void newLine(FILE *p)
  ********************************/
 void skipComment(FILE *p)
 {
+    char ant = look;
+    nextChar(p);
 
+    if(ant == '/' && look == '/'){
+      while(look != '\n'){
+          nextChar(p);
+      }
+
+      linha++;
+    }
 }
 
 /*********************************
@@ -251,10 +277,15 @@ void getWord(FILE *p)
 {
     int i = 0;
     char temp[255];
+
     while(isalnum(look) || look == '_'){ //leia_isso
-        temp[i++] = look;
+        temp[i] = look;
         nextChar(p);
+        i++;
     }
+
+    token[i] = '\0';
+
     strcpy(token, temp);
 }
 
@@ -266,6 +297,7 @@ void getWord(FILE *p)
 void getOp(FILE *p)
 {
     int i;
+
     token[0] = look;
     token[1] = '\0';
     nextChar(p);
