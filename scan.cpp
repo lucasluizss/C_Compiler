@@ -48,7 +48,6 @@ Tk *getTokens(char *nome)
     {
         scan(p);
 
-        ntoken++;
         //printf("Token: %d \n", ntoken);
         str = (char*) malloc(sizeof(char)*strlen(token) + 1);
         strcpy(str, token);
@@ -60,6 +59,7 @@ Tk *getTokens(char *nome)
         elemento->prox = NULL;
         insereTk(elemento);
         //printf("Token: %s \n", elemento->nome);
+        ntoken++;
     }
 
     return TkList;
@@ -167,7 +167,7 @@ void exibeTk(Tk *TkList)
             linhaAtual = TkList->linha;
         }
 
-        printf("%s", TkList->nome);
+        printf("%s ", TkList->nome);
         TkList = TkList->prox;
     }
 
@@ -283,8 +283,6 @@ void getWord(FILE *p)
         nextChar(p);
         i++;
     }
-
-    token[i] = '\0';
 
     strcpy(token, temp);
 }

@@ -1,9 +1,8 @@
-#include <iostream>
 #include<stdio.h>
 #include<string.h>
 #include"scan.h"
 
-using namespace std;
+//using namespace std;
 //extern Tk *getTokens(char *nome);
 
 /*********************************
