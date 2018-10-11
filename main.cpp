@@ -24,7 +24,7 @@ void loadPr();
 int main(int argc, char *argv[])
 {
     //simbolos.push
-
+    Tk* Lista;
     contId = 0;
     char nome[50];// = "arquivo.c";
 
@@ -58,10 +58,10 @@ void analiseLexica(){
 }
 
 void loadId(){
-    char nome[][10] = {"int", "char", "float", "double", "short", "long"}
+    char nome[][10] = {"int", "char", "float", "double", "short", "long"};
     Tk* l;
     
-    for(int = 0; i < 6; i++){
+    for(int i = 0; i < 6; i++){
         l = (Tk*) malloc(sizeof(Tk));
         l->nome = (char*)malloc(sizeof(char)*strlen(nome[0]));
         strcpy(l->nome, nome[i]);
@@ -72,10 +72,10 @@ void loadId(){
 }
 
 void loadPr(){
-    char nome[][10] = {"do", "for", "while", "switch", "else", "if"}
+    char nome[][10] = {"do", "for", "while", "switch", "else", "if"};
     Tk* l;
     
-    for(int = 0; i < 6; i++){
+    for(int i = 0; i < 6; i++){
         l = (Tk*) malloc(sizeof(Tk));
         l->nome = (char*)malloc(sizeof(char)*strlen(nome[0]));
         strcpy(l->nome, nome[i]);
