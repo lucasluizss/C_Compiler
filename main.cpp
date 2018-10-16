@@ -45,16 +45,23 @@ int main(int argc, char *argv[])
 }
 
 void analiseLexica(){
-    Tk* list;
-    // list<Tk*>::iterator it;
-
-    // for(it = simbolos.front(); it != NULL; it++){
-
-    // }
-
-    for(list = tokens; list != NULL; list=list->prox){
-
+    Tk* ptr;
+    int aux = 0;
+    for(ptr = listId.front(); ptr != NULL; ptr = ptr->prox){
+        //ptr->nome;
+        
     }
+}
+
+int buscaId(char* nome){
+    list <Tk*>::iterator it;
+
+    for(it = listId.begin(); it != listId.end(); it++){
+        if(strcmp(nome, (*it)->nome) == 0)
+            return 1;
+    }
+
+    return 0;
 }
 
 void loadId(){
@@ -64,6 +71,7 @@ void loadId(){
     for(int i = 0; i < 6; i++){
         l = (Tk*) malloc(sizeof(Tk));
         l->nome = (char*)malloc(sizeof(char)*strlen(nome[0]));
+        printf("%s", nome[i]);
         strcpy(l->nome, nome[i]);
         contId++;
         listId.push_front(l);
