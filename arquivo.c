@@ -2,12 +2,6 @@
 
 int main(){
     
-    //Imprimir - comentario
-    printf("Ola Mundo\n");
+    int i = 0;
 
-    /*
-        Comentario livre
-    */
-
-    return 0;
 }
