@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/a.exe",
-            "args": [],//["arquivo.c"],
+            "args": ["arquivo.c"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

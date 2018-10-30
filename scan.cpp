@@ -6,13 +6,13 @@
 
 // variaveis globais
 int linha;
-int coluna, antColumn;
+int coluna;
 char look;
 char token[256];
 int ntoken;
-Tk *TkList=NULL, *elemento=NULL;
 
-// fun��es locais
+
+// funções locais
 FILE *abreArq(char *nome);
 void nextChar(FILE *p);
 void scan(FILE *P);
@@ -24,44 +24,41 @@ void getOp(FILE *p);
 void skipComment(FILE *p);
 void getOp(FILE *p);
 int isOp(char c);
-int isSpecial(char c);
 void getNum(FILE *p);
-
 
 /***********************************************
  * Nome: getTokens
- * desc: obt�m todos os tokens do arquivo nome
+ * desc: obtém todos os tokens do arquivo nome
  * returno: ponteiro para a lista de tokens
  ***********************************************/
 Tk *getTokens(char *nome)
 {
+    Tk *TkList=NULL, *elemento=NULL;
+    FILE *P;
     linha = 1;
-    coluna = 0;
-    ntoken = 0;
-
-    FILE *p;
     char *str;
+    FILE *p;
     p = abreArq(nome);
     nextChar(p);
-
-    while(!feof(p))
+    ntoken =0;
+    while(!feof(p)) // feof returna verdadeiro se p apontar para o final do arquivo.
     {
         scan(p);
+        str = (char*) malloc (sizeof(char)*strlen(token));
+        strcpy(str,token);
+        elemento = (Tk*) malloc (sizeof(Tk));
+        elemento->nome=str;
+        elemento->linha=linha;
+        elemento ->prox =NULL;
 
-        //printf("Token: %d \n", ntoken);
-        str = (char*) malloc(sizeof(char)*strlen(token) + 1);
-        strcpy(str, token);
-        elemento = (Tk*) malloc(sizeof(Tk));
-        elemento->nome = str;
-        elemento->linha = linha;
-        elemento->coluna = antColumn;
-        elemento->id = ntoken;
-        elemento->prox = NULL;
-        insereTk(elemento);
-        //printf("Token: %s \n", elemento->nome);
+        if(TkList==NULL) // primeira posição
+            TkList = elemento;
+        else // demais posições
+            insereTk(TkList,elemento);
         ntoken++;
-    }
+      //  printf("token %d: %s\n",ntoken,token);
 
+    }
     return TkList;
 }
 
@@ -72,28 +69,47 @@ Tk *getTokens(char *nome)
  ********************************/
 void scan(FILE *p)
 {
-    strcpy(token, "");
-
-    if(look == ' ' || look == '\t'){
+    if(look == ' ')
         skipWhite(p);
-    }
 
-    if(look == '\n' || look == 13){ // CR LF
+    if(look == '/')
+        skipComment(p);
+//   printf("scan\n");
+    while (look == '\n'|| look == 13) //19-11-14 ADICIONADO || look == 13, resolver problema com arquivos com "carriage return = 13"
+    {
         newLine(p);
+
+        if(look == ' ')
+            skipWhite(p);
+
+        if(look == '/')
+            skipComment(p);
     }
 
-    if(isOp(look) || isSpecial(look)){
-        antColumn = coluna;
-        getOp(p);
-    }
-    else if((look > 64 && look < 91) || (look > 96 && look < 123)){
-        antColumn = coluna;
+    skipWhite(p);
+
+    if (isalpha(look))      /*A função isalpha(c) retorna TRUE se c for uma letra ou retorna FALSE caso contrario. */
         getWord(p);
-    }
-    else{
-        antColumn = coluna;
+
+    else if (isdigit(look)) /*A função isalnum(c) retorna TRUE se c for letra ou digito ou retorna FALSE caso contrario */
+        getNum(p);
+
+    else if (isOp(look))
         getOp(p);
+
+    else if(look == '/')
+    {
+        skipComment(p);
     }
+
+    else
+    {
+        token[0] = look;
+        token[1] = '\0';
+
+        nextChar(p);
+    }
+    skipWhite(p);
 }
 
 /*********************************
@@ -106,24 +122,20 @@ FILE *abreArq(char *nome)
     char *var;
     FILE *in;
 
-    // aqui tem um exemplo do uso da fun��o strstr
+    // aqui tem um exemplo do uso da função strstr
 
     var = strstr(nome,".c");
-
-    if(var == NULL) // O ARQUIVO N�O TEM EXTEN��O
+    if(var ==NULL) // O ARQUIVO NÃO TEM EXTENÇÃO
     {
-        printf("Arquivo : %s invalido!\n", nome);
-        exit(1); // cada erro ser� tratado com uma sa�da diferente de 0.
+        printf("Arquivo : %s invalido!\n",nome);
+        exit(1); // cada erro será tratado com uma saída diferente de 0.
     }
-
     in = fopen(nome,"r");
-
     if(in == NULL)
     {
         printf("Nao foi possivel abrir o arquivo %s \n",nome);
         exit(3);
     }
-
     return in;
 }
 
@@ -132,18 +144,12 @@ FILE *abreArq(char *nome)
  * desc:
  * returno: void
  ********************************/
-void insereTk(Tk *TkElemento)
+void insereTk(Tk *TkList, Tk *TkElemento)
 {
     Tk *ptr;
 
-    if(TkList == NULL){
-        TkList = TkElemento;
-    }
-
-    else{
-        for(ptr = TkList; ptr->prox != NULL; ptr = ptr->prox);
-        ptr->prox = TkElemento;
-    }
+    for(ptr=TkList; ptr->prox!=NULL; ptr=ptr->prox); //indo para o final do arquivo
+    ptr->prox=TkElemento;
 
 }
 
@@ -154,24 +160,24 @@ void insereTk(Tk *TkElemento)
  ********************************/
 void exibeTk(Tk *TkList)
 {
-    int linhaAtual = 1;
+    Tk *ptr;
+    int num=-1,caracter=0;
+    int lin=0;
 
-    while(TkList != NULL){
-        if(TkList->linha > linhaAtual){
-            int diff = TkList->linha - linhaAtual  ;
-
-            for(int i=0;i<diff;i++){
-                printf("\n");
-            }
-
-            linhaAtual = TkList->linha;
+    for(ptr=TkList; ptr->prox!=NULL; ptr=ptr->prox) //indo para o final do arquivo
+    {
+        if( num != ptr->linha )
+        {
+            num = ptr->linha;
+            printf("\nlinha %d:",num);
+           lin++;
         }
+        printf(" %s",ptr->nome);
+        caracter++;
 
-        printf("%s ", TkList->nome);
-        TkList = TkList->prox;
     }
-
-    printf("\n\nLinhas: %d\n", linha);
+    printf("\nTotal de Linhas: %d\n",lin);
+    printf("Total de caracteres: %d\n",caracter);
 }
 
 /*********************************
@@ -182,7 +188,12 @@ void exibeTk(Tk *TkList)
 void liberaTk(Tk *TkList)
 {
     Tk *T,*ptr;
-
+    for(ptr=TkList; ptr->prox!=NULL; ptr=ptr->prox)
+    {
+        T = ptr->prox;
+        free(ptr);
+        ptr = T;
+    }
 }
 
 /*********************************
@@ -202,10 +213,9 @@ void removeTk(Tk *TkList, int chave)
  ********************************/
 void nextChar(FILE *p)
 {
-    if(look != EOF) // EOF(End Of File)
+    if(look !=EOF) // EOF(End Of File)
     {
         look = getc(p);
-        coluna++;
     }
 }
 
@@ -216,9 +226,8 @@ void nextChar(FILE *p)
  ********************************/
 void skipWhite(FILE *p)
 {
-    while (look == ' ' || look == '\t'){
+    while (look == ' ' || look == '\t')
         nextChar(p);
-    }
 }
 
 /*********************************
@@ -228,13 +237,24 @@ void skipWhite(FILE *p)
  ********************************/
 void newLine(FILE *p)
 {
-    while(look == '\n' || look == 13){
-        if(look == '\n'){
-            linha++;
-            coluna = 0;
-        }
-
+    // aqui apresenta o tratamento de um arquivo cuja
+    // a linha é finalizada no padrão windows ou linux
+    if(look =='\n' )  // window
+    {
         nextChar(p);
+        //if( look !='\0' && look !=EOF)
+        //{
+         //   printf("erro na linha %d coluna %d\n",linha,coluna);
+
+        //}
+        if(look=='\0')
+         nextChar(p);
+        linha++;
+    }
+    else if(look=='\0')
+    {
+        nextChar(p);
+        linha++;
     }
 }
 
@@ -245,16 +265,8 @@ void newLine(FILE *p)
  ********************************/
 void skipComment(FILE *p)
 {
-    char ant = look;
-    nextChar(p);
-
-    if(ant == '/' && look == '/'){
-      while(look != '\n'){
-          nextChar(p);
-      }
-
-      linha++;
-    }
+    while (look != '\n' && look != 13)
+        nextChar(p);
 }
 
 /*********************************
@@ -266,6 +278,19 @@ void getNum(FILE *p)
 {
     int i;
 
+    // if (!isdigit(look))
+    //     expected("Integer");
+
+    for (i = 0; isdigit(look) && i < MAXNUM; i++)
+    {
+
+        token[i] = look;
+        nextChar(p);
+
+    }
+    token[i] = '\0';
+    skipWhite(p);
+
 }
 
 /*********************************
@@ -275,16 +300,16 @@ void getNum(FILE *p)
  ********************************/
 void getWord(FILE *p)
 {
-    int i = 0;
-    char temp[255];
+    int i;
+     for (i = 0; isalpha(look) && i < MAXNAME; i++)
+    {
 
-    while(isalnum(look) || look == '_'){ //leia_isso
-        temp[i] = look;
+        token[i] = look;
         nextChar(p);
-        i++;
-    }
 
-    strcpy(token, temp);
+    }
+    token[i] = '\0';
+    skipWhite(p);
 }
 
 /*********************************
@@ -296,9 +321,24 @@ void getOp(FILE *p)
 {
     int i;
 
-    token[0] = look;
-    token[1] = '\0';
-    nextChar(p);
+    //if (!isOp(look))
+    //    expected("Operator");
+
+    for (i = 0; isOp(look) && i < MAXOP; i++)
+    {
+
+        token[i] = look;
+        nextChar(p);
+        if( (token[i]=='/'&&look=='/') || (token[i]=='/'&&look=='*') )
+         {
+              skipComment(p);
+              token[0] = '\0';
+              return;
+         }
+
+    }
+    token[i] = '\0';
+    skipWhite(p);
 }
 
 /*********************************
@@ -311,7 +351,3 @@ int isOp(char c)
     return (strchr("#.+-*/<>:=!", c) != NULL); //Returns a pointer to the first occurrence of character in the C string str.
 }
 
-int isSpecial(char c)
-{
-    return (strchr("{}(),;[]\"", c) != NULL);
-}
