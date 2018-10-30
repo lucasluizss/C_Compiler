@@ -139,11 +139,9 @@ void analiseLexica() {
         if (ptr->linha != aux) {
             aux = ptr->linha;
         }
-
-        lx = buscaId(ptr->nome);
-        printf("return busca: %d\n", lx);
+        
         // teste se � um id
-        if (lx) {
+        if (buscaId(ptr->nome)) {
             printf("entrou....%s\n", ptr->nome);
             //exit(1);
             //for( ; ;)
@@ -157,21 +155,19 @@ void analiseLexica() {
 
         // testa para saber se � uma express�o de atribui��o
         //printf("%s ", ptr->nome);
-    }
-    printf("aqui 3\n");
-
+    }    
 }
 
 Tk * lexaId(Tk * ptr) {
     
     for (;;) {
         if (buscaSimbolo(ptr->nome)) {
-            printf("Erro... linha: %d A variavel: %s ja foi declarada \n", ptr->linha, ptr->nome);
+            printf("Erro... linha: %d \nA variavel: %s ja foi declarada \n", ptr->linha, ptr->nome);
             exit(1);
         }
 
         if (!isalpha(ptr->nome[0])) {
-            printf("Erro... linha: %d A variavel: %s esperado um identificador \n", ptr->linha, ptr->nome);
+            printf("Erro... linha: %d \nA variavel: %s esperado um identificador \n", ptr->linha, ptr->nome);
             exit(1);
         }
 
@@ -194,10 +190,10 @@ Tk * lexaId(Tk * ptr) {
 }
 
 int buscaSimbolo(char * nome) {
-    list < simbolos * > ::iterator it;
+    list<simbolos*> ::iterator it;
 
     for (it = listSimbolos.begin(); it != listSimbolos.end(); it++) {
-        if (strcmp(nome, ( * it)->nome) == 0) {
+        if (strcmp(nome, (*it)->nome) == 0) {
             return 1;
         }
     }
@@ -206,7 +202,7 @@ int buscaSimbolo(char * nome) {
 }
 
 void exibListSimbolo() {
-    list < simbolos * > ::iterator it;
+    list<simbolos*> ::iterator it;
     char tip[][15] = {
         "Ponteiro",
         "Id",
@@ -217,7 +213,7 @@ void exibListSimbolo() {
     };
 
     for (it = listSimbolos.begin(); it != listSimbolos.end(); it++) {
-        printf("[ %s, %s , %d ]\n", ( * it)->nome, tip[( * it)->id], ( * it)->n);
+        printf("[ %s, %s , %d ]\n", (*it)->nome, tip[(*it)->id], (*it)->n);
     }
 
     printf("\n");
@@ -246,7 +242,7 @@ void loadId() {
 }
 
 int buscaId(char * nome) {
-    list < Tk * > ::iterator it;
+    list<Tk*> ::iterator it;
     int i = 1;
 
     for (it = listId.begin(); it != listId.end(); it++, i++) {
