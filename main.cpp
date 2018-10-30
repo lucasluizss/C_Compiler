@@ -124,13 +124,8 @@ void carregaRW() {
 }
 
 void analiseLexica() {
-    //for(list = tokens; list != NULL; list=list->prox) {
-    //
-    //}
     Tk * ptr;
     int aux = 0, lx;
-
-    printf("aqui 1\n");
 
     for (ptr = listTokens; ptr != NULL; ptr = ptr->prox) {
 
@@ -143,11 +138,7 @@ void analiseLexica() {
         // teste se � um id
         if (buscaId(ptr->nome)) {
             printf("entrou....%s\n", ptr->nome);
-            //exit(1);
-            //for( ; ;)
-            //{
             ptr = lexaId(ptr->prox);
-            //}
         }
         // testa par saber se � um if
 
@@ -184,7 +175,6 @@ Tk * lexaId(Tk * ptr) {
             printf("Erro linha: %d, caractere: %s invalido. Esperado uma , ou ; \n", ptr->linha, ptr->nome);
             exit(1);
         }
-
     }
 
 }
