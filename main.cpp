@@ -61,7 +61,7 @@ void addListSimbolo(Tk* sb, int id);
 void exibListSimbolo();
 
 /*********************************
- * Nome: main
+ * Nome: Lucas / Rhuan
  * desc:
  * returno:
  ********************************/
@@ -179,7 +179,7 @@ Tk * lexaId(Tk * ptr) {
 
 }
 
-int buscaSimbolo(char * nome) {
+int buscaSimbolo(char *nome) {
     list<simbolos*> ::iterator it;
 
     for (it = listSimbolos.begin(); it != listSimbolos.end(); it++) {
@@ -231,7 +231,7 @@ void loadId() {
     }
 }
 
-int buscaId(char * nome) {
+int buscaId(char *nome) {
     list<Tk*> ::iterator it;
     int i = 1;
 
@@ -257,15 +257,15 @@ void loadPr() {
     Tk* l;
     
     for (int i = 0; i < 6; i++) {
-        l = (Tk * ) malloc(sizeof(Tk));
-        l->nome = (char * ) malloc(sizeof(char) * strlen(nome[5]));
+        l = (Tk *) malloc(sizeof(Tk));
+        l->nome = (char *) malloc(sizeof(char) * strlen(nome[5]));
         strcpy(l->nome, nome[i]);
         l->id = contId;
         contId++;
     }
 }
 
-void addListSimbolo(Tk * sb, int id) {
+void addListSimbolo(Tk *sb, int id) {
     static int scont = 0;
     scont++;
     //list <Tk*> listSimbolos;
