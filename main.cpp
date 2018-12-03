@@ -134,27 +134,24 @@ void carregaRW() {
 }
 
 void analiseLexica() {
-  //for(list = tokens; list != NULL; list=list->prox) {
-  //
-  //}
   Tk* ptr;
   int aux = 0, lx;
 
   printf("aqui 1\n");
 
   for (ptr = listTokens; ptr != NULL; ptr = ptr -> prox) {
-    //   Aqui � o loop principal
-
-    //ptr->nome;
     printf("Nome: %s\n", ptr -> nome);
     //system("pause");
+
     if (ptr -> linha != aux) {
       //printf("\n");
       aux = ptr -> linha;
     }
+
     lx = buscaId(ptr -> nome);
     printf("return busca: %d\n", lx);
     // teste se � um id
+
     if (lx) {
       printf("entrou....%s\n", ptr -> nome);
       //exit(1);
@@ -164,16 +161,42 @@ void analiseLexica() {
       //}
     } else if (buscaPalReser(ptr -> nome)) {
       // testa par saber se � um if
+      switch (ptr -> nome) {
+        case "for":
+          printf("Palavra reservada: for\n");
+          if(!strcmp(ptr -> nome, "{")){
+            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
+            exit(1);
+          }
+          break;
+        case "if":
+          printf("Palavra reservada: if\n");
+          if(!strcmp(ptr -> nome, "{")){
+            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
+            exit(1);
+          }
+          break;
+        case "while":
+          printf("Palavra reservada: if\n");
+          if(!strcmp(ptr -> nome, "{")){
+            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
+            exit(1);
+          }
+          break;
+        case "switch":
+          printf("Palavra reservada: if\n");
+          if(!strcmp(ptr -> nome, "{")){
+            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
+            exit(1);
+          }
+          break;
+      }
+
       aux++;
-      // testa para saber se � um for
-    } //
+    }
 
-    // testa para saber se � um for
-
-    // testa para saber se � uma express�o de atribui��o
     printf("aqui 2\n");
-    //printf("%s ", ptr->nome);
-  } // fim loop principal
+  }
 
   printf("aqui 3\n");
 }
@@ -184,15 +207,14 @@ Tk* lexaCase(Tk* ptr) {
 
 Tk* lexaId(Tk* ptr) {
   // Tk*aux;
-  // loop no infinito
   for (;;) {
     if (buscaSimbolo(ptr -> nome)) {
-      printf("Erro... linha: %d A variavel: %s ja foi declarada \n", ptr -> linha, ptr -> nome);
+      printf("Erro linha %d: A variavel: \"%s\" ja foi declarada! \n", ptr -> linha, ptr -> nome);
       exit(1);
     }
 
     if (!isalpha(ptr -> nome[0])) {
-      printf("Erro... linha: %d A variavel: %s esperado um identificador \n", ptr -> linha, ptr -> nome);
+      printf("Erro linha %d: A variavel: \"%s\" esperado um identificador! \n", ptr -> linha, ptr -> nome);
       exit(1);
     }
 
@@ -200,7 +222,6 @@ Tk* lexaId(Tk* ptr) {
     ptr = ptr -> prox;
 
     if (ptr -> nome[0] == ';') {
-      //ptr = ptr->prox;
       exibListSimbolo();
       return ptr;
     } else if (ptr -> nome[0] == ',') {
