@@ -1,286 +1,329 @@
-#include <iostream>
-#include<stdio.h>
+#include<iostream>
+#include<stdio.h> 
 #include<stdlib.h>
-#include<string.h>
-#include<list>
-#include"scan.h"
+#include<string.h> 
+#include<list> 
+#include "scan.h"
 using namespace std;
 
-
-
-//extern Tk *getTokens(char *nome);
+//extern Tk*getTokens(char*nome);
 Tk* tokens;
-list <simbolos*> listSimbolos;
-list <char*> pReservadas;
-list <Tk*> listId;
-Tk *listTokens;
+list<simbolos*> listSimbolos;
+list<char*> pReservadas;
+list<Tk*> listId;
+Tk* listTokens;
 int contId;
 
-
-char reservedWords[][10] = {"auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","for","goto","if","int","long","register","return","short","signed","sizeof","static","struct","switch","typeof","union","unsigned","void","volatile","while"};
+char reservedWords[][10] = {
+  "auto",
+  "break",
+  "case",
+  "char",
+  "const",
+  "continue",
+  "default",
+  "do",
+  "double",
+  "else",
+  "enum",
+  "extern",
+  "float",
+  "for",
+  "goto",
+  "if",
+  "int",
+  "long",
+  "register",
+  "return",
+  "short",
+  "signed",
+  "sizeof",
+  "static",
+  "struct",
+  "switch",
+  "typeof",
+  "union",
+  "unsigned",
+  "void",
+  "volatile",
+  "while"
+};
 
 //list<simbolos*>listSimbolos;
 void analiseLexica();
 void loadId();
 void loadPr();
 
-int buscaId(char *nome);
-int buscaSimbolo(char *nome);
-Tk* lexaId(Tk *ptr);
-void addListSimbolo(Tk *sb, int id);
+int buscaId(char* nome);
+int buscaSimbolo(char* nome);
+Tk* lexaId(Tk* ptr);
+void addListSimbolo(Tk* sb, int id);
 void exibListSimbolo();
-int buscaPalReser(char *nome);
+int buscaPalReser(char* nome);
 
 /*********************************
- * Nome: main
- * desc:
- * returno:
- ********************************/
-int main(int argc, char *argv[])
-{
+* Nome: main
+* desc:
+* returno:
+********************************/
+int main(int argc, char* argv[]) {
+  char arq[50];
+  char* var;
 
-    char arq[50];
-    char *var;
-    if(argc != 2)
-    {
-        printf("digite o nome do arquivo:");
-        scanf("%s",arq);
-    }
-    else
-    {
-        strcpy(arq,argv[1]);
-    }
+  if (argc != 2) {
+    printf("digite o nome do arquivo:");
+    scanf("%s", arq);
+  } else {
+    strcpy(arq, argv[1]);
+  }
 
-    listTokens = getTokens(arq);
-    exibeTk(listTokens);
-    loadId();
-    loadPr();
-	//
-	analiseLexica();
-    liberaTk(listTokens);
-    return 0;
+  listTokens = getTokens(arq);
+  exibeTk(listTokens);
+  loadId();
+  loadPr();
+  analiseLexica();
+  liberaTk(listTokens);
+
+  return 0;
 }
 
-
-void carregaRW()
-{
+void carregaRW() {
   int i;
-  char *str;
-   //       32
-  char words[][10] = {"auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","for","goto","if","int","long","register","return","short","signed","sizeof","static","struct","switch","typeof","union","unsigned","void","volatile","while"};
-  //list <Tk*> pReservadas;
-   //pReservadas
-   for(i =0; i< 32; i++)
-   {
-     str = (char *)malloc(sizeof(char)*strlen(words[i]));
-     strcpy(str,words[i]);
-     pReservadas.push_back(str);
-   }
+  char* str;
+  char words[][10] = {
+    "auto",
+    "break",
+    "case",
+    "char",
+    "const",
+    "continue",
+    "default",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "extern",
+    "float",
+    "for",
+    "goto",
+    "if",
+    "int",
+    "long",
+    "register",
+    "return",
+    "short",
+    "signed",
+    "sizeof",
+    "static",
+    "struct",
+    "switch",
+    "typeof",
+    "union",
+    "unsigned",
+    "void",
+    "volatile",
+    "while"
+  };
+  //list<Tk*> pReservadas;
+  //pReservadas
+  for (i = 0; i<32; i++) {
+    str = (char* ) malloc(sizeof(char)* strlen(words[i]));
+    strcpy(str, words[i]);
+    pReservadas.push_back(str);
+  }
 }
 
 void analiseLexica() {
+  //for(list = tokens; list != NULL; list=list->prox) {
+  //
+  //}
+  Tk* ptr;
+  int aux = 0, lx;
 
+  printf("aqui 1\n");
 
+  for (ptr = listTokens; ptr != NULL; ptr = ptr -> prox) {
+    //   Aqui ï¿½ o loop principal
 
-    //for(list = tokens; list != NULL; list=list->prox) {
-    //
-    //}
-	  Tk *ptr;
-    int aux=0, lx;
+    //ptr->nome;
+    printf("Nome: %s\n", ptr -> nome);
+    //system("pause");
+    if (ptr -> linha != aux) {
+      //printf("\n");
+      aux = ptr -> linha;
+    }
+    lx = buscaId(ptr -> nome);
+    printf("return busca: %d\n", lx);
+    // teste se ï¿½ um id
+    if (lx) {
+      printf("entrou....%s\n", ptr -> nome);
+      //exit(1);
+      //for( ; ;)
+      //{
+      ptr = lexaId(ptr -> prox);
+      //}
+    } else if (buscaPalReser(ptr -> nome)) {
+      // testa par saber se ï¿½ um if
+      aux++;
+      // testa para saber se ï¿½ um for
+    } //
 
-    printf("aqui 1\n");
-    for(ptr = listTokens; ptr != NULL; ptr = ptr->prox)
-    {
-                       //   Aqui é o loop principal
+    // testa para saber se ï¿½ um for
 
-	      //ptr->nome;
-        printf("Nome: %s\n",ptr->nome);
-        //system("pause");
-        if(ptr->linha != aux) {
-            //printf("\n");
-            aux=ptr->linha;
-        }
-        lx = buscaId(ptr->nome);
-        printf("return busca: %d\n",lx);
-        // teste se é um id
-        if( lx )
-        {
-          printf("entrou....%s\n",ptr->nome);
-          //exit(1);
-          //for( ; ;)
-          //{
-                ptr = lexaId(ptr->prox);
-          //}
-        }else if( buscaPalReser(ptr->nome))
-        {
-            // testa par saber se é um if
-            aux++;
-            // testa para saber se é um for
-        }//
+    // testa para saber se ï¿½ uma expressï¿½o de atribuiï¿½ï¿½o
+    printf("aqui 2\n");
+    //printf("%s ", ptr->nome);
+  } // fim loop principal
 
+  printf("aqui 3\n");
+}
 
-
-
-        // testa para saber se é um for
-
-
-        // testa para saber se é uma expressão de atribuição
-        printf("aqui 2\n");
-        //printf("%s ", ptr->nome);
-    }// fim loop principal
-        printf("aqui 3\n");
+Tk* lexaCase(Tk* ptr) {
 
 }
 
-
-Tk* lexaCase(Tk *ptr)
-{
-
-}
-
-// funçao implementada depois da aula******************
-// funçao implementada depois da aula******************
-// funçao implementada depois da aula******************
-// funçao implementada depois da aula******************
-//           23 / 10
-Tk* lexaId(Tk *ptr)
-{
-   // Tk *aux;
-   // loop no infinito
-   for( ; ; )
-   {
-       if(buscaSimbolo(ptr->nome))
-       {
-           printf("Erro... linha: %d A variavel: %s ja foi declarada \n",ptr->linha,ptr->nome);
-           exit(1);
-       }
-
-       if(!isalpha(ptr->nome[0]))
-       {
-           printf("Erro... linha: %d A variavel: %s esperado um identificador \n",ptr->linha,ptr->nome);
-           exit(1);
-       }
-
-
-       addListSimbolo(ptr,1);
-       ptr = ptr->prox;
-
-       if(ptr->nome[0]==';')
-       {
-           //ptr = ptr->prox;
-           exibListSimbolo();
-           return ptr;
-       }else if (ptr->nome[0]==','){
-          ptr = ptr->prox;
-       }else{
-          printf("Erro linha: %d, caractere: %s invalido. Esperado uma , ou ; \n",ptr->linha,ptr->nome);
-          exit(1);
-       }
-
-   }
-
-}
-
-int buscaSimbolo(char *nome)
-{
-  list <simbolos*>::iterator it;
-
-    for(it = listSimbolos.begin(); it != listSimbolos.end(); it++)
-    {
-       if(strcmp(nome,(*it)->nome )==0)
-       {
-         return 1;
-       }
+Tk* lexaId(Tk* ptr) {
+  // Tk*aux;
+  // loop no infinito
+  for (;;) {
+    if (buscaSimbolo(ptr -> nome)) {
+      printf("Erro... linha: %d A variavel: %s ja foi declarada \n", ptr -> linha, ptr -> nome);
+      exit(1);
     }
 
-    return 0;
-}
-
-void exibListSimbolo()
-{
-  list <simbolos*>::iterator it;
-  char tip[][15] = {"Ponteiro","Id","Constante","Vetor","Opr","Preservada"};
-    for(it = listSimbolos.begin(); it != listSimbolos.end(); it++)
-    {
-       printf("[ %s, %s , %d ]\n", (*it)->nome,tip[(*it)->id],(*it)->n);
+    if (!isalpha(ptr -> nome[0])) {
+      printf("Erro... linha: %d A variavel: %s esperado um identificador \n", ptr -> linha, ptr -> nome);
+      exit(1);
     }
 
-   printf("\n");
+    addListSimbolo(ptr, 1);
+    ptr = ptr -> prox;
+
+    if (ptr -> nome[0] == ';') {
+      //ptr = ptr->prox;
+      exibListSimbolo();
+      return ptr;
+    } else if (ptr -> nome[0] == ',') {
+      ptr = ptr -> prox;
+    } else {
+      printf("Erro linha: %d, caractere: %s invalido. Esperado uma , ou ; \n", ptr -> linha, ptr -> nome);
+      exit(1);
+    }
+  }
+}
+
+int buscaSimbolo(char* nome) {
+  list<simbolos*> ::iterator it;
+
+  for (it = listSimbolos.begin(); it != listSimbolos.end(); it++) {
+    if (strcmp(nome, (* it) -> nome) == 0) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+void exibListSimbolo() {
+  list<simbolos*> ::iterator it;
+
+  char tip[][15] = {
+    "Ponteiro",
+    "Id",
+    "Constante",
+    "Vetor",
+    "Opr",
+    "Preservada"
+  };
+
+  for (it = listSimbolos.begin(); it != listSimbolos.end(); it++) {
+    printf("[ %s, %s , %d ]\n", (* it) -> nome, tip[(* it) -> id], (* it) -> n);
+  }
+
+  printf("\n");
 }
 
 void loadId() {
 
-    char nome[][10]={"int","char","float","double","struct"};
-    Tk *l;
-    //Palavras reservadas
-    for(int i=0; i<6; i++) {
-        l = (Tk*) malloc(sizeof(Tk));
-        l->nome=(char*)malloc(sizeof(char)*strlen(nome[5]));
-        strcpy(l->nome, nome[i]);
-        l->id = contId;
-        contId++;
-        listId.push_back(l);
-        //pReservadas
-    }
+  char nome[][10] = {
+    "int",
+    "char",
+    "float",
+    "double",
+    "struct"
+  };
+
+  Tk* l;
+  //Palavras reservadas
+  for (int i = 0; i<6; i++) {
+    l = (Tk* ) malloc(sizeof(Tk));
+    l -> nome = (char* ) malloc(sizeof(char)* strlen(nome[5]));
+    strcpy(l -> nome, nome[i]);
+    l -> id = contId;
+    contId++;
+    listId.push_back(l);
+    //pReservadas
+  }
 }
 
-int buscaId(char *nome)
-{
-     //list <Tk*> listId;
-    list <Tk*>::iterator it;
-    int i=1;
+int buscaId(char* nome) {
+  //list<Tk*> listId;
+  list<Tk*> ::iterator it;
+  int i = 1;
 
-    for(it = listId.begin(); it != listId.end(); it++,i++)
-    {
-       if(strcmp(nome,(*it)->nome )==0)
-       {
-         return i;
-       }
+  for (it = listId.begin(); it != listId.end(); it++, i++) {
+    if (strcmp(nome, (* it) -> nome) == 0) {
+      return i;
     }
+  }
 
-    return 0;
+  return 0;
 }
 
 void loadPr() {
-    char nome[][10]={"if","for","do","switch","while","long"};
-    Tk *l;
-    //Palavras reservadas
-    for(int i=0; i<6; i++) {
-        l = (Tk*) malloc(sizeof(Tk));
-        l->nome=(char*)malloc(sizeof(char)*strlen(nome[5]));
-        strcpy(l->nome, nome[i]);
-        l->id = contId;
-        contId++;
-        //pReservadas
-    }
+  char nome[][10] = {
+    "if",
+    "for",
+    "do",
+    "switch",
+    "while",
+    "long"
+  };
+
+  Tk* l;
+  //Palavras reservadas
+  for (int i = 0; i<6; i++) {
+    l = (Tk* ) malloc(sizeof(Tk));
+    l -> nome = (char* ) malloc(sizeof(char)* strlen(nome[5]));
+    strcpy(l -> nome, nome[i]);
+    l -> id = contId;
+    contId++;
+    //pReservadas
+  }
 }
 
-void addListSimbolo(Tk *sb, int id)
-{
-    static int scont = 0;
-    scont++;
-    //list <Tk*> listSimbolos;
-    simbolos *ss = new simbolos();
-    ss->n = scont;
-    ss->id = id;
-    ss->nome=sb->nome;
-    ss->linha=sb->linha;
-    listSimbolos.push_back(ss);
+void addListSimbolo(Tk* sb, int id) {
+  static int scont = 0;
+  scont++;
+  //list<Tk*> listSimbolos;
+  simbolos* ss = new simbolos();
+  ss -> n = scont;
+  ss -> id = id;
+  ss -> nome = sb -> nome;
+  ss -> linha = sb -> linha;
+  listSimbolos.push_back(ss);
 }
 
-int buscaPalReser(char *nome)
-{
-     //list <Tk*> listId;
-    list <char*>::iterator it;
-    int i=1;
+int buscaPalReser(char* nome) {
+  //list<Tk*> listId;
+  list<char*> ::iterator it;
+  int i = 1;
 
-    for(it = pReservadas.begin(); it != pReservadas.end(); it++,i++)
-    {
-       if(strcmp(nome,*it )==0)
-       {
-         return i;
-       }
+  for (it = pReservadas.begin(); it != pReservadas.end(); it++, i++) {
+    if (strcmp(nome,* it) == 0) {
+      return i;
     }
+  }
 
-    return 0;
+  return 0;
 }
