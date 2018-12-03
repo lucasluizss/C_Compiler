@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
   char* var;
 
   if (argc != 2) {
-    printf("digite o nome do arquivo:");
+    printf("Digite o nome do arquivo: ");
     scanf("%s", arq);
   } else {
     strcpy(arq, argv[1]);
