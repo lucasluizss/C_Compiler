@@ -53,7 +53,7 @@ char reservedWords[][10] = {
 void analiseLexica();
 void loadId();
 void loadPr();
-
+void ShowError(int linha, char* msg);
 int buscaId(char* nome);
 int buscaSimbolo(char* nome);
 Tk* lexaId(Tk* ptr);
@@ -137,72 +137,52 @@ void analiseLexica() {
   Tk* ptr;
   int aux = 0, lx;
 
-  printf("aqui 1\n");
-
   for (ptr = listTokens; ptr != NULL; ptr = ptr -> prox) {
-    printf("Nome: %s\n", ptr -> nome);
-    //system("pause");
-
-    if (ptr -> linha != aux) {
-      //printf("\n");
+    //printf("Nome: %s\n", ptr -> nome);
+    
+    if (ptr -> linha != aux) {      
       aux = ptr -> linha;
     }
 
     lx = buscaId(ptr -> nome);
-    printf("return busca: %d\n", lx);
-    // teste se � um id
 
     if (lx) {
-      printf("entrou....%s\n", ptr -> nome);
-      //exit(1);
-      //for( ; ;)
-      //{
+      printf("Entrou %s\n", ptr -> nome);
       ptr = lexaId(ptr -> prox);
-      //}
-    } else if (buscaPalReser(ptr -> nome)) {
-      // testa par saber se � um if
-      switch (ptr -> nome) {
-        case "for":
-          printf("Palavra reservada: for\n");
-          if(!strcmp(ptr -> nome, "{")){
-            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
-            exit(1);
-          }
-          break;
-        case "if":
-          printf("Palavra reservada: if\n");
-          if(!strcmp(ptr -> nome, "{")){
-            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
-            exit(1);
-          }
-          break;
-        case "while":
-          printf("Palavra reservada: if\n");
-          if(!strcmp(ptr -> nome, "{")){
-            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
-            exit(1);
-          }
-          break;
-        case "switch":
-          printf("Palavra reservada: if\n");
-          if(!strcmp(ptr -> nome, "{")){
-            printf("Erro linha %d: caracter \"{\" não foi informado!", ptr -> linha);
-            exit(1);
-          }
-          break;
+    } else if (buscaPalReser(ptr -> nome)) {      
+      if (!strcmp(ptr -> nome, "if")){
+        if (strcmp(ptr -> prox -> nome, "{")) {
+          ShowError(aux, "Caracter \"{\" esperado para o if");
+        }
+      }
+      else if (!strcmp(ptr -> nome, "else")) {
+        if (strcmp(ptr -> prox -> nome, "{")) {
+          ShowError(aux, "Caracter \"{\" esperado para o else");
+        }
+      }
+      else if (!strcmp(ptr -> nome, "for")) {
+        if (strcmp(ptr -> prox -> nome, "(")) {
+          ShowError(aux, "Caracter \"(\" esperado para o for");
+        }
+      }
+      else if (!strcmp(ptr -> nome, "while")) {
+        if (strcmp(ptr -> prox -> nome, "(")) {
+          ShowError(aux, "Caracter \"(\" esperado para o while");
+        }
       }
 
       aux++;
     }
-
-    printf("aqui 2\n");
   }
-
-  printf("aqui 3\n");
 }
 
 Tk* lexaCase(Tk* ptr) {
 
+}
+
+void ShowError(int linha, char* msg){
+  printf("Erro linha %d: %s", linha, msg);
+  exit(1);
 }
 
 Tk* lexaId(Tk* ptr) {
@@ -319,7 +299,8 @@ void loadPr() {
     strcpy(l -> nome, nome[i]);
     l -> id = contId;
     contId++;
-    //pReservadas
+    printf("aaaa ==== >>> %s", l->nome);
+    pReservadas.push_back(l -> nome);
   }
 }
 

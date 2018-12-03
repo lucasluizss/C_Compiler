@@ -301,12 +301,10 @@ void getNum(FILE *p)
 void getWord(FILE *p)
 {
     int i;
-     for (i = 0; isalpha(look) && i < MAXNAME; i++)
+    for (i = 0; isalpha(look) && i < MAXNAME; i++)
     {
-
         token[i] = look;
         nextChar(p);
-
     }
     token[i] = '\0';
     skipWhite(p);
