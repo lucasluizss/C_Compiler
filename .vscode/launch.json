@@ -8,31 +8,21 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/a.out",//a.exe
-            "args": ["arquivo.c"],
+            "program": "${workspaceRoot}/a.exe",
+            "args": [],//["arquivo.c"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
+            "miDebuggerPath": "C:/Program Files (x86)/CodeBlocks/MinGW/bin/gdb32.exe",//"C:/Program Files (x86)/CodeBlocks/MinGW/bin/gdb.exe",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ],
-            "linux": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "/usr/bin/gdb"
-             },
-             "osx": {
-                "MIMode": "lldb"
-             },
-             "windows": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "C:/Program Files (x86)/CodeBlocks/MinGW/bin/gdb.exe",
-             }
+            ]
         }
     ]
 }
