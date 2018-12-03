@@ -161,23 +161,23 @@ void insereTk(Tk *TkList, Tk *TkElemento)
 void exibeTk(Tk *TkList)
 {
     Tk *ptr;
-    int num = -1, caracter = 0;
+    int num=-1,caracter=0;
     int lin=0;
 
     for(ptr=TkList; ptr->prox!=NULL; ptr=ptr->prox) //indo para o final do arquivo
     {
-        if(num != ptr->linha)
+        if( num != ptr->linha )
         {
             num = ptr->linha;
-            printf("\nlinha %d:", num);
-            lin++;
+            printf("\nlinha %d:",num);
+           lin++;
         }
         printf(" %s",ptr->nome);
         caracter++;
-    }
 
-    printf("\nTotal de Linhas: %d\n", lin);
-    printf("Total de caracteres: %d\n", caracter);
+    }
+    printf("\nTotal de Linhas: %d\n",lin);
+    printf("Total de caracteres: %d\n",caracter);
 }
 
 /*********************************
