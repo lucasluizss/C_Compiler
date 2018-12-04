@@ -149,24 +149,14 @@ void analiseLexica() {
       printf("Entrou %s\n", ptr -> nome);
       ptr = lexaId(ptr -> prox);
     } else if (buscaPalReser(ptr -> nome)) {      
-      if (!strcmp(ptr -> nome, "if")){
+      if (!strcmp(ptr -> nome, "if") || !strcmp(ptr -> nome, "for") || !strcmp(ptr -> nome, "while")){
         if (strcmp(ptr -> prox -> nome, "(")) {
-          ShowError(aux, "Caracter \"{\" esperado para o if");
+          ShowError(aux, "Caracter \"(\" esperado!");
         }
       }
       else if (!strcmp(ptr -> nome, "else")) {
         if (strcmp(ptr -> prox -> nome, "{")) {
-          ShowError(aux, "Caracter \"{\" esperado para o else");
-        }
-      }
-      else if (!strcmp(ptr -> nome, "for")) {
-        if (strcmp(ptr -> prox -> nome, "(")) {
-          ShowError(aux, "Caracter \"(\" esperado para o for");
-        }
-      }
-      else if (!strcmp(ptr -> nome, "while")) {
-        if (strcmp(ptr -> prox -> nome, "(")) {
-          ShowError(aux, "Caracter \"(\" esperado para o while");
+          ShowError(aux, "Caracter \"{\" esperado!");
         }
       }
 
