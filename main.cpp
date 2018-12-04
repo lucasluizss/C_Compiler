@@ -138,7 +138,6 @@ void analiseLexica() {
   int aux = 0, lx;
 
   for (ptr = listTokens; ptr != NULL; ptr = ptr -> prox) {
-    //printf("Nome: %s\n", ptr -> nome);
     
     if (ptr -> linha != aux) {      
       aux = ptr -> linha;
@@ -151,7 +150,7 @@ void analiseLexica() {
       ptr = lexaId(ptr -> prox);
     } else if (buscaPalReser(ptr -> nome)) {      
       if (!strcmp(ptr -> nome, "if")){
-        if (strcmp(ptr -> prox -> nome, "{")) {
+        if (strcmp(ptr -> prox -> nome, "(")) {
           ShowError(aux, "Caracter \"{\" esperado para o if");
         }
       }
