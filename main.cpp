@@ -175,7 +175,8 @@ void ShowError(int linha, char* msg){
 }
 
 Tk* lexaId(Tk* ptr) {
-  // Tk*aux;
+  int ehAtribuicao = 0;
+
   for (;;) {
     if (buscaSimbolo(ptr -> nome)) {
       printf("Erro linha %d: A variavel: \"%s\" ja foi declarada! \n", ptr -> linha, ptr -> nome);
@@ -194,11 +195,19 @@ Tk* lexaId(Tk* ptr) {
       exibListSimbolo();
       return ptr;
     } else if (ptr -> nome[0] == ',') {
+      // if (ehAtribuicao) {
+      //   ShowError(ptr -> linha, "Caracter \",\" invalido. Esperado operador ou \";\"");
+      // }
       ptr = ptr -> prox;
     } else {
       printf("Erro linha: %d, caractere: %s invalido. Esperado uma , ou ; \n", ptr -> linha, ptr -> nome);
       exit(1);
     }
+
+    // if (ptr -> nome[0] == '=') {
+    //   ehAtribuicao = 1;
+    //   ptr = ptr -> prox;
+    // }
   }
 }
 
@@ -288,7 +297,6 @@ void loadPr() {
     strcpy(l -> nome, nome[i]);
     l -> id = contId;
     contId++;
-    printf("aaaa ==== >>> %s", l->nome);
     pReservadas.push_back(l -> nome);
   }
 }
